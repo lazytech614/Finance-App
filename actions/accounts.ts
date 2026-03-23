@@ -2,6 +2,7 @@
 
 import prisma from "@/lib/prisma"
 import { auth } from "@clerk/nextjs/server"
+import { Decimal } from "@prisma/client/runtime/client"
 import { revalidatePath } from "next/cache"
 
 const serializeTransaction = (obj: any) => {
@@ -108,5 +109,79 @@ export async function getAccountWithTransaction(accountId: string) {
         }
     }catch (error: any) {
         return {success: false, error: error.message}
+    }
+}
+
+export async function bulkDeleteTransactions(transactionIds: string[]) {
+    try {
+        const {userId} = await auth()
+        if(!userId) {
+            throw new Error("Unauthorized")
+        }
+
+        const user = await prisma.user.findUnique({
+            where: {
+                clerkId: userId
+            }
+        })
+        if(!user) {
+            throw new Error("User not found")
+        }
+
+        const transactions = await prisma.transaction.findMany({
+            where: {
+                id: {
+                    in: transactionIds
+                },
+                userId: user.id
+            }
+        })
+
+        const balanceChanges = transactions.reduce<Record<string, Decimal>>(
+        (acc, transaction) => {
+            const change =
+                transaction.type === "EXPENSE"
+                    ? transaction.amount
+                    : -transaction.amount
+
+                acc[transaction.accountId] =
+                (acc[transaction.accountId] || new Decimal(0)).add(change)
+
+            return acc
+        },{})
+
+        // When we wantsimultaneous api call and if one fails then all to be failed, prisma transactions
+        await prisma.$transaction(async (tx) => {
+            //Delete transactions
+            await tx.transaction.deleteMany({
+                where: {
+                    id: {
+                        in: transactionIds
+                    },
+                    userId: user.id
+                }
+            })
+
+            // Update account balance
+            for(const [accountId, balanceChange] of Object.entries(balanceChanges)) {
+                await tx.account.update({
+                    where: {
+                        id: accountId
+                    },
+                    data: {
+                        balance: {
+                            increment: balanceChange
+                        }
+                    }
+                })
+            }
+        })
+
+        revalidatePath("/dashboard")
+        revalidatePath("/account/[id]")
+
+        return {success: true}
+    }catch(err: any) {
+        return {success: false, error: err.message}
     }
 }

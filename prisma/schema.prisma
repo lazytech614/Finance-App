@@ -53,9 +53,9 @@ model Transaction {
   date              DateTime
   category          String  
   receiptUrl        String?
-  isRecuring        Boolean            @default(false)
-  recuringInterval  RecuringInterval?
-  nextRecuringDate  DateTime?
+  isRecurring        Boolean            @default(false)
+  recurringInterval  RecuringInterval?
+  nextRecurringDate  DateTime?
   lastprocessedDate DateTime?
   status            TransactionStatus  @default(COMPLETED)
   userId            String
