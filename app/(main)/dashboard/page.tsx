@@ -1,10 +1,12 @@
 import { getCurrentBudget } from "@/actions/budget"
-import { fetchUserAccounts } from "@/actions/dashboard"
+import { fetchUserAccounts, getDashboardData } from "@/actions/dashboard"
 import { AccountCard } from "@/components/dashboard/account-card"
 import { BudgetProgress } from "@/components/dashboard/budget-progress"
 import { CreateAccountDrawer } from "@/components/dashboard/create-accout-drawer"
+import { DashboardOverview } from "@/components/dashboard/dashboard-overview"
 import { Card, CardContent } from "@/components/ui/card"
 import { PlusCircle } from "lucide-react"
+import { Suspense } from "react"
 
 const Dashboard = async () => {
     const accounts = await fetchUserAccounts()
@@ -16,6 +18,8 @@ const Dashboard = async () => {
         budgetData = await getCurrentBudget(defaultAccount.id)
     }
 
+    const transactions = await getDashboardData()
+
   return (
     <div className="space-y-8">
         {/* BDGET PROGRESS */}
@@ -24,6 +28,12 @@ const Dashboard = async () => {
         )}
 
         {/* OVERVIEW  */}
+        <Suspense fallback={<div>Loading...</div>}>
+            <DashboardOverview 
+                accounts={accounts.data}
+                transactions={transactions.data || []}
+            />
+        </Suspense>
 
         {/* ACCOUTS GRID  */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">

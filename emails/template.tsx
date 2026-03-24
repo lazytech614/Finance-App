@@ -45,7 +45,6 @@ const PREVIEW_DATA = {
   },
 };
 
-// ✅ Proper Types
 type MonthlyReportData = {
   month: string;
   stats: {
@@ -75,7 +74,6 @@ type EmailProps =
       data: BudgetAlertData;
     };
 
-// ✅ Component
 export default function EmailTemplate({
   userName = "",
   type,
@@ -102,17 +100,17 @@ export default function EmailTemplate({
             <Section style={styles.statsContainer}>
               <div style={styles.stat}>
                 <Text style={styles.text}>Total Income</Text>
-                <Text style={styles.heading}>${data.stats.totalIncome}</Text>
+                <Text style={styles.heading}>{"\u20B9"}{data.stats.totalIncome.toFixed(2)}</Text>
               </div>
 
               <div style={styles.stat}>
                 <Text style={styles.text}>Total Expenses</Text>
-                <Text style={styles.heading}>${data.stats.totalExpenses}</Text>
+                <Text style={styles.heading}>{"\u20B9"}{data.stats.totalExpenses.toFixed(2)}</Text>
               </div>
 
               <div style={styles.stat}>
                 <Text style={styles.text}>Net</Text>
-                <Text style={styles.heading}>${net}</Text>
+                <Text style={styles.heading}>{"\u20B9"}{net.toFixed(2)}</Text>
               </div>
             </Section>
 
@@ -126,8 +124,8 @@ export default function EmailTemplate({
                 {Object.entries(data.stats.byCategory).map(
                   ([category, amount]) => (
                     <div key={category} style={styles.row}>
-                      <Text style={styles.text}>{category}</Text>
-                      <Text style={styles.text}>${amount}</Text>
+                      <Text style={styles.text}>{category}&nbsp;</Text>
+                      <Text style={styles.text}>{"\u20B9"}{amount.toFixed(2)}</Text>
                     </div>
                   )
                 )}
@@ -177,23 +175,23 @@ export default function EmailTemplate({
 
             <Section style={styles.statsContainer}>
               <div style={styles.stat}>
-                <Text style={styles.text}>Budget Amount</Text>
+                <Text style={styles.text}>Budget Amount&nbsp;</Text>
                 <Text style={styles.heading}>
-                  ${data.budgetAmount}
+                  {"\u20B9"}{data.budgetAmount.toFixed(2)}
                 </Text>
               </div>
 
               <div style={styles.stat}>
-                <Text style={styles.text}>Spent So Far</Text>
+                <Text style={styles.text}>Spent So Far&nbsp;</Text>
                 <Text style={styles.heading}>
-                  ${data.totalExpenses}
+                  {"\u20B9"}{data.totalExpenses.toFixed(2)}
                 </Text>
               </div>
 
               <div style={styles.stat}>
-                <Text style={styles.text}>Remaining</Text>
+                <Text style={styles.text}>Remaining&nbsp;</Text>
                 <Text style={styles.heading}>
-                  ${remaining}
+                  {"\u20B9"}{remaining.toFixed(2)}
                 </Text>
               </div>
             </Section>
@@ -204,9 +202,8 @@ export default function EmailTemplate({
   }
 
   return null;
-}
+} 
 
-// ✅ Styles
 const styles = {
   body: {
     backgroundColor: "#f6f9fc",

@@ -3,6 +3,7 @@
 import prisma from "@/lib/prisma"
 import { auth } from "@clerk/nextjs/server"
 import { revalidatePath } from "next/cache"
+import { success } from "zod"
 
 const serializeTransaction = (obj: any) => {
     const serialized = {...obj}
@@ -115,5 +116,37 @@ export async function fetchUserAccounts() {
         return {success: true, data: serializedAccounts}
     }catch(err: any) {
         throw new Error(err.message)
+    }
+}
+
+export async function getDashboardData() {
+    try {
+        const {userId} = await auth()
+        if(!userId) {
+            throw new Error("Unauthorized")
+        }
+
+        const user = await prisma.user.findUnique({
+            where: {
+                clerkId: userId
+            }
+        })
+        if(!user) {
+            throw new Error("User not found")
+        }
+
+        const transactions = await prisma.transaction.findMany({
+            where: {
+                userId: user.id
+            },
+            orderBy: {
+                date: "desc"
+            }
+        })
+
+        return {success: true, data: transactions.map(serializeTransaction)}
+    }catch(err) {
+        console.error((err as Error).message)
+        throw new Error((err as Error).message)
     }
 }
