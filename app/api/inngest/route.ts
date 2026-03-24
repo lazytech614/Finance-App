@@ -1,6 +1,8 @@
 import { serve } from "inngest/next";
-import { inngest } from "../../../lib/ingest/client";
-import { checkBudgetAlerts, generateMonthlyReport, processRecurringTransaction, triggerRecurringTransactions } from "@/lib/ingest/functions";
+import { inngest } from "../../../lib/inngest/client";
+import { checkBudgetAlerts, generateMonthlyReport, processRecurringTransaction, triggerRecurringTransactions } from "@/lib/inngest/functions";
+
+export const runtime = "nodejs";
 
 export const { GET, POST, PUT } = serve({
   client: inngest,
