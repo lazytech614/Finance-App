@@ -39,7 +39,7 @@ export const AccountCard = ({account}: any) => {
     }
 
     useEffect(() => {
-        if(updateDefaultAccountData?.success) {
+        if((updateDefaultAccountData as any).success) {
             console.log(updateDefaultAccountData)
             toast.success("Default account updated successfully")
         }
