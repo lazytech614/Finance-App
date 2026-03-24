@@ -11,10 +11,10 @@ const aj = arcjet({
   key: process.env.ARCJET_KEY || "",
   rules: [
     shield({
-      mode: "LIVE",
+      mode: "DRY_RUN",
     }),
     detectBot({
-      mode: "LIVE",
+      mode: "DRY_RUN",
       allow: [
         "CATEGORY:SEARCH_ENGINE", // Google, Bing, etc
         "GO_HTTP" // Foe Inngest
