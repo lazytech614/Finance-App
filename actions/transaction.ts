@@ -206,7 +206,7 @@ export async function getTransaction(id: string) {
             throw new Error("User not found")
         }
 
-        const transaction = await prisma.transaction.findUnique({
+        const transaction = await prisma.transaction.findFirst({
             where: {
                 id,
                 userId: user.id

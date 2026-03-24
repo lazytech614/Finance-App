@@ -4,6 +4,8 @@ import { AddTransactionForm } from "@/components/transaction/add-transaction-for
 import { defaultCategories } from "@/data/categories"
 
 export const dynamic = "force-dynamic"
+export const fetchCache = "force-no-store"
+export const revalidate = 0
 
 const Transaction = async({ searchParams }: { searchParams: URLSearchParams | any }) => {
     const accounts = await fetchUserAccounts()
