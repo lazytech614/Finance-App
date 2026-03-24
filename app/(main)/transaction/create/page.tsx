@@ -3,6 +3,8 @@ import { getTransaction } from "@/actions/transaction"
 import { AddTransactionForm } from "@/components/transaction/add-transaction-form"
 import { defaultCategories } from "@/data/categories"
 
+export const dynamic = "force-dynamic"
+
 const Transaction = async({ searchParams }: { searchParams: URLSearchParams | any }) => {
     const accounts = await fetchUserAccounts()
 
