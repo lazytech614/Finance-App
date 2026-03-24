@@ -6,30 +6,48 @@ import { defaultCategories } from "@/data/categories"
 export const dynamic = "force-dynamic"
 export const fetchCache = "force-no-store"
 export const revalidate = 0
+export const runtime = "nodejs"
 
-const Transaction = async({ searchParams }: { searchParams: URLSearchParams | any }) => {
-    const accounts = await fetchUserAccounts()
+type Props = {
+  searchParams?: {
+    edit?: string
+  }
+}
 
-    const params = await searchParams
-    const editId = params?.edit
+const Transaction = async ({ searchParams }: Props) => {
+  let accounts = null
+  let initialData = null
 
-    let intialData = null
-    if(editId) {
+  const editId = searchParams?.edit
+
+  try {
+    accounts = await fetchUserAccounts()
+  } catch (err) {
+    console.error("Error fetching accounts:", err)
+  }
+
+  if (editId) {
+    try {
       const transaction = await getTransaction(editId)
-      intialData = transaction
+      initialData = transaction
+    } catch (err) {
+      console.error("Error fetching transaction:", err)
     }
+  }
 
   return (
     <div className="max-w-3xl mx-auto px-5">
-        <h1 className="text-5xl gradient-title mb-5">{editId ? "Edit" : "Add"} Transaction</h1>
+      <h1 className="text-5xl gradient-title mb-5">
+        {editId ? "Edit" : "Add"} Transaction
+      </h1>
 
-        <AddTransactionForm 
-          accounts={accounts.data} 
-          categories={defaultCategories} 
-          editMode={!!editId}
-          intialData={intialData?.data}
-          editId={editId}
-        />
+      <AddTransactionForm
+        accounts={accounts?.data || []}
+        categories={defaultCategories}
+        editMode={!!editId}
+        intialData={initialData?.data}
+        editId={editId}
+      />
     </div>
   )
 }
