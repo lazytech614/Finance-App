@@ -22,6 +22,7 @@ import { format } from "date-fns"
 import { cn } from "@/lib/utils"
 import { ArrowDownRight, ArrowUpRight } from "lucide-react"
 import { Cell, Legend, Pie, PieChart, ResponsiveContainer } from "recharts"
+import { formatIndianCurrency } from "@/lib/formatIndianCurrency"
 
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"]
 
@@ -110,13 +111,13 @@ export const DashboardOverview = ({accounts, transactions}: any) => {
                                         {transaction.type === "EXPENSE" ? (
                                             <>
                                                 <ArrowDownRight className="mr-1 h-4 w-4"/>
-                                                <span>&#8377;{transaction.amount.toFixed(2)}</span>
+                                                <span>&#8377;{formatIndianCurrency(transaction.amount)}</span>
                                             </>
                                             
                                         ) : (
                                             <>
                                                 <ArrowUpRight className="mr-1 h-4 w-4"/>
-                                                <span>&#8377;{transaction.amount.toFixed(2)}</span>
+                                                <span>&#8377;{formatIndianCurrency(transaction.amount)}</span>
                                             </>
                                         )}
                                     </div>

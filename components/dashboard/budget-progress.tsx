@@ -17,6 +17,7 @@ import useFetch from "@/hooks/useFetch"
 import { updateBudget } from "@/actions/budget"
 import { toast } from "sonner"
 import { Progress } from "../ui/progress"
+import { formatIndianCurrency } from "@/lib/formatIndianCurrency"
 
 type UpdateBudgetResponse = 
   | { success: true; data: { amount: number } }
@@ -97,7 +98,7 @@ export const BudgetProgress = ({intialBudget, currentExpanses}: any) => {
                     ) : (
                         <>
                             <CardDescription>
-                                {intialBudget ? `₹${currentExpanses.toFixed(2)} of ₹${intialBudget?.toFixed(2)} spent` : "No budget set"}
+                                {formatIndianCurrency(intialBudget) ? `₹${formatIndianCurrency(currentExpanses)} of ₹${formatIndianCurrency(intialBudget)} spent` : "No budget set"}
                             </CardDescription>
                             <Button
                                 variant={"ghost"}

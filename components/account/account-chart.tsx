@@ -20,6 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { formatIndianCurrency } from '@/lib/formatIndianCurrency';
 
 const DATE_RANGES = {
     "7D": {label: "Last 7 Days", days: 7},
@@ -97,15 +98,15 @@ export const AccountChart = ({transactions}: any) => {
                 <div className='flex flex-row items-center justify-around mb-6 text-sm'>
                     <div className='text-center'>
                         <p className='text-muted-foreground'>Total Income</p>
-                        <p className='text-lg font-bold text-green-500'>&#8377;{totals.income.toFixed(2)}</p>
+                        <p className='text-lg font-bold text-green-500'>&#8377;{formatIndianCurrency(totals.income)}</p>
                     </div>
                     <div className='text-center'>
                         <p className='text-muted-foreground'>Total Expense</p>
-                        <p className='text-lg font-bold text-red-500'>&#8377;{totals.expense.toFixed(2)}</p>
+                        <p className='text-lg font-bold text-red-500'>&#8377;{formatIndianCurrency(totals.expense)}</p>
                     </div>
                     <div className='text-center'>
                         <p className='text-muted-foreground'>Net</p>
-                        <p className={`text-lg font-bold ${totals.income - totals.expense >= 0 ? "text-green-500" : "text-red-500"}`}>&#8377;{(totals.income - totals.expense).toFixed(2)}</p>
+                        <p className={`text-lg font-bold ${totals.income - totals.expense >= 0 ? "text-green-500" : "text-red-500"}`}>&#8377;{formatIndianCurrency(totals.income - totals.expense)}</p>
                     </div>
                 </div>
 

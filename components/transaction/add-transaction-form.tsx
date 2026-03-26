@@ -34,6 +34,7 @@ import { useRouter, useSearchParams } from "next/navigation"
 import { useEffect } from "react"
 import { toast } from "sonner"
 import { ReciptScanner } from "./recipt-scanner"
+import { formatIndianCurrency } from "@/lib/formatIndianCurrency"
 
 type TransactionResponse = {
   success: boolean
@@ -65,7 +66,7 @@ export const AddTransactionForm = ({accounts, categories, editMode=false, intial
             ? 
         {
             type: intialData.type,
-            amount: intialData.amount.toString(),
+            amount: formatIndianCurrency(intialData.amount),
             description: intialData.description,
             accountId: intialData.accountId,
             category: intialData.category,
@@ -135,6 +136,12 @@ export const AddTransactionForm = ({accounts, categories, editMode=false, intial
         {!editMode && (
             <ReciptScanner onScanComplete={handleScanComplete}/>
         )}
+
+        <div className="flex items-center gap-x-2">
+            <div className="h-[0.5px] w-full bg-gray-400"/>
+            <div className="text-muted-foreground text-sm">OR</div>
+            <div className="h-[0.5px] w-full bg-gray-400"/>
+        </div>
   
         <div className="space-y-2">
             <Label className="text-sm font-medium">Type</Label>
@@ -186,7 +193,7 @@ export const AddTransactionForm = ({accounts, categories, editMode=false, intial
                         <SelectGroup>
                             {Array.isArray(accounts) && accounts.map((account: any) => (
                                 <SelectItem key={account.id} value={account.id}>
-                                    {account.name} (${parseFloat(account.balance).toFixed(2)})
+                                    {account.name} &#8377;{formatIndianCurrency(account.balance)}
                                 </SelectItem>
                             ))}
                         </SelectGroup>

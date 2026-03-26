@@ -44,6 +44,7 @@ import useFetch from "@/hooks/useFetch"
 import { bulkDeleteTransactions } from "@/actions/accounts"
 import { toast } from "sonner"
 import { BarLoader } from "react-spinners"
+import { formatIndianCurrency } from "@/lib/formatIndianCurrency"
 
 type RecurringInterval = "DAILY" | "WEEKLY" | "MONTHLY" | "YEARLY";
 
@@ -70,6 +71,8 @@ export const TransactionTable = ({transactions}: any) => {
     const [searchTerm, setSearchTerm] = useState<string>("")
     const [typeFilter, setTypeFilter] = useState<string>("")
     const [recurringFilter, setRecurringFilter] = useState<string>("")
+    const [currentPage, setCurrentPage] = useState(1)
+    const [itemsPerPage, setItemsPerPage] = useState(10)
 
     const filteredAndSortedTransactions = useMemo(() => {
         let filtered = [...transactions]
@@ -116,6 +119,41 @@ export const TransactionTable = ({transactions}: any) => {
         return filtered
     }, [transactions, sortConfig, searchTerm, typeFilter, recurringFilter])
 
+    const totalPages = Math.ceil(filteredAndSortedTransactions.length / itemsPerPage)
+
+    const paginatedTransactions = useMemo(() => {
+        const start = (currentPage - 1) * itemsPerPage
+        const end = start + itemsPerPage
+        return filteredAndSortedTransactions.slice(start, end)
+    }, [filteredAndSortedTransactions, currentPage, itemsPerPage])
+
+    const getPageNumbers = (currentPage: number, totalPages: number, maxPages = 5) => {
+        const pages: (number | string)[] = []
+
+        if(totalPages <= maxPages) {
+            for(let i = 1; i <= totalPages; i++) pages.push(i)
+        } else {
+            const half = Math.floor(maxPages / 2)
+            let start = currentPage - half
+            let end = currentPage + half
+
+            if(start < 1) {
+                start = 1
+                end = maxPages
+            }
+            if(end > totalPages) {
+                end = totalPages
+                start = totalPages - maxPages + 1
+            }
+
+            if(start > 1) pages.push(1, '...')
+            for(let i = start; i <= end; i++) pages.push(i)
+            if(end < totalPages) pages.push('...', totalPages)
+        }
+
+        return pages
+    }
+
     const handleSort = (field: string) => {
         setSortConfig((current) => ({
             field,
@@ -154,6 +192,10 @@ export const TransactionTable = ({transactions}: any) => {
             setSelectedIds([])
         }
     }, [deleted, deleteLoading])
+
+    useEffect(() => {
+        setCurrentPage(1)
+    }, [searchTerm, typeFilter, recurringFilter])
 
   return (
     <div className="space-y-4">
@@ -275,14 +317,14 @@ export const TransactionTable = ({transactions}: any) => {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {filteredAndSortedTransactions.length === 0 ? (
+                    {paginatedTransactions.length === 0 ? (
                         <TableRow>
                             <TableCell colSpan={7} className="text-center text-muted-foreground text-sm">
                                 No Trasnsactions Found
                             </TableCell>
                         </TableRow>
                     ) : (
-                        filteredAndSortedTransactions.map((transaction: any) => (
+                        paginatedTransactions.map((transaction: any) => (
                             <TableRow key={transaction.id}>
                                 <TableCell>
                                     <Checkbox onCheckedChange={() => handleSelect(transaction.id)} checked={selectedIds.includes(transaction.id)} />
@@ -304,7 +346,7 @@ export const TransactionTable = ({transactions}: any) => {
                                     color: transaction.type === 'INCOME' ? "green" : "red"
                                 }} className="text-right font-medium">
                                     {transaction.type === "INCOME" ? "+" : "-"}
-                                    &#8377;{transaction.amount.toFixed(2)}
+                                    &#8377;{formatIndianCurrency(transaction.amount)}
                                 </TableCell>
                                 <TableCell>
                                     {transaction.isRecurring ? (
@@ -357,6 +399,69 @@ export const TransactionTable = ({transactions}: any) => {
                     )}
                 </TableBody>
             </Table>
+            
+            {/* Page Info */}
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mt-4 gap-2 sm:gap-0 w-full p-4">
+                <div className="text-sm text-muted-foreground">
+                    Page {currentPage} of {totalPages}
+                </div>
+
+                {/* Controls */}
+                <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-1 overflow-x-auto">
+                    {/* Previous Button */}
+                    <Button
+                        size="sm"
+                        disabled={currentPage === 1}
+                        onClick={() => setCurrentPage(prev => prev - 1)}
+                    >
+                        Previous
+                    </Button>
+
+                    {/* Page Numbers - scrollable on small screens */}
+                    <div className="flex gap-1 overflow-x-auto px-1">
+                    {getPageNumbers(currentPage, totalPages).map((page, index) => (
+                        <Button
+                            key={index}
+                            size="sm"
+                            variant={currentPage === page ? "default" : "outline"}
+                            onClick={() => typeof page === 'number' && setCurrentPage(page)}
+                            disabled={page === '...'}
+                            className="min-w-8 flex justify-center"
+                        >
+                        {page}
+                        </Button>
+                    ))}
+                    </div>
+
+                    {/* Next Button */}
+                    <Button
+                    size="sm"
+                    disabled={currentPage === totalPages}
+                    onClick={() => setCurrentPage(prev => prev + 1)}
+                    >
+                    Next
+                    </Button>
+                </div>
+
+                {/* Items per page */}
+                <Select
+                    value={itemsPerPage.toString()}
+                    onValueChange={(val) => {
+                    setItemsPerPage(Number(val))
+                    setCurrentPage(1)
+                    }}
+                >
+                    <SelectTrigger className="w-18">
+                        <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                    <SelectItem value="5">5</SelectItem>
+                    <SelectItem value="10">10</SelectItem>
+                    <SelectItem value="20">20</SelectItem>
+                    <SelectItem value="50">50</SelectItem>
+                    </SelectContent>
+                </Select>
+            </div>
         </div>
     </div>
   )
