@@ -6,7 +6,7 @@ export default function PrivacyPolicyPage() {
       <h1 className="text-3xl font-bold mb-6">Privacy Policy</h1>
 
       <p className="mb-4">
-        Welth values your privacy. We only collect information necessary to provide our services. All data is encrypted and never shared with third parties without your consent.
+        BudgetAI values your privacy. We only collect information necessary to provide our services. All data is encrypted and never shared with third parties without your consent.
       </p>
 
       <p className="mb-4">

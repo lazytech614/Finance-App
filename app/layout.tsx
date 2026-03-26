@@ -6,6 +6,7 @@ import { Header } from "@/components/global/header";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { ThemeProvider } from "../components/providers/theme-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -26,12 +27,19 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <ClerkProvider>
-          <Header />
-          <main className="min-h-screen">
-            <TooltipProvider>{children}</TooltipProvider>
-          </main>
-          <Toaster richColors />
-          <Footer />
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <Header />
+            <main className="min-h-screen">
+              <TooltipProvider>{children}</TooltipProvider>
+            </main>
+            <Toaster richColors />
+            <Footer />
+          </ThemeProvider>
         </ClerkProvider>
       </body>
     </html>

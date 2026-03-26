@@ -3,9 +3,9 @@ export const Footer = () => {
 
   const sections = [
     {
-      title: "Welth",
+      title: "BudgetAI",
       description:
-        "Welth is your personal finance companion. Track expenses, manage budgets, and grow your wealth efficiently.",
+        "BudgetAI is your personal finance companion. Track expenses, manage budgets, and grow your wealth efficiently.",
       links: [],
     },
     {
@@ -29,7 +29,7 @@ export const Footer = () => {
     {
       title: "Contact",
       links: [
-        { label: "support@welth.com", href: "mailto:support@welth.com" },
+        { label: "support@budget.ai.com", href: "mailto:support@budget.ai.com" },
         { label: "+91 123 456 7890", href: "tel:+911234567890" },
       ],
       socials: [
@@ -41,14 +41,14 @@ export const Footer = () => {
   ];
 
   return (
-    <footer className="bg-blue-100 text-gray-700 border-t border-gray-200">
+    <footer className="bg-blue-100 dark:bg-black text-gray-700 border-t border-gray-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {sections.map((section, idx) => (
             <div key={idx}>
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">{section.title}</h3>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white/80 mb-3">{section.title}</h3>
               {section.description && (
-                <p className="text-sm text-gray-600">{section.description}</p>
+                <p className="text-sm text-gray-600 dark:text-muted-foreground">{section.description}</p>
               )}
               {section.links.length > 0 && (
                 <ul className="space-y-2 text-sm">
@@ -56,7 +56,7 @@ export const Footer = () => {
                     <li key={i}>
                       <a
                         href={link.href}
-                        className="hover:text-blue-600 transition-colors"
+                        className="dark:text-muted-foreground dark:hover:text-blue-600 hover:text-blue-600  transition-colors"
                       >
                         {link.label}
                       </a>
@@ -82,7 +82,7 @@ export const Footer = () => {
         </div>
 
         <div className="mt-12 border-t border-gray-200 pt-6 text-center text-sm text-gray-500">
-          &copy; {currentYear} Welth. All rights reserved.
+          &copy; {currentYear} BudgetAI. All rights reserved.
         </div>
       </div>
     </footer>

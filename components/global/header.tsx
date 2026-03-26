@@ -4,21 +4,16 @@ import Link from "next/link"
 import { Button } from "../ui/button"
 import { LayoutDashboard, SquarePen } from "lucide-react"
 import { checkUser } from "@/lib/checkUser"
+import { ModeToggle } from "./mode-toggle"
 
 export const Header = async () => {
   await checkUser()
 
   return (
-    <header className="fixed top-0 w-full bg-white/80 backdrop-blur-md z-50 border-b">
+    <header className="fixed top-0 w-full bg-background/80 backdrop-blur-md z-50 border-b">
       <nav className="container mx-auto p-4 flex justify-between items-center">
         <Link href="/">
-          <Image 
-            src={"/logo.png"} 
-            alt="logo" 
-            width={200} 
-            height={60} 
-            className="h-12 w-auto object-contain"
-          />
+          <h1 className="gradient-title sm:text-3xl font-bold">BudgetAI</h1>
         </Link>
         <div>
           <Show when="signed-out">
@@ -31,6 +26,7 @@ export const Header = async () => {
                   Sign Up
                 </Button>
               </SignUpButton>
+              <ModeToggle />
             </div>
           </Show>
 
@@ -48,6 +44,7 @@ export const Header = async () => {
                   <span className="hidden md:inline">Add Transaction</span>
                 </Button>
               </Link>
+              <ModeToggle />
               <UserButton appearance={{
                 elements: {
                   avatarBox: "w-10 h-10"
