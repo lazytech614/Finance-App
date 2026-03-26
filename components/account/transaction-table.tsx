@@ -401,67 +401,69 @@ export const TransactionTable = ({transactions}: any) => {
             </Table>
             
             {/* Page Info */}
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mt-4 gap-2 sm:gap-0 w-full p-4">
-                <div className="text-sm text-muted-foreground">
-                    Page {currentPage} of {totalPages}
-                </div>
-
-                {/* Controls */}
-                <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-1 overflow-x-auto">
-                    {/* Previous Button */}
-                    <Button
-                        size="sm"
-                        disabled={currentPage === 1}
-                        onClick={() => setCurrentPage(prev => prev - 1)}
-                    >
-                        Previous
-                    </Button>
-
-                    {/* Page Numbers - scrollable on small screens */}
-                    <div className="flex gap-1 overflow-x-auto px-1">
-                    {getPageNumbers(currentPage, totalPages).map((page, index) => (
-                        <Button
-                            key={index}
-                            size="sm"
-                            variant={currentPage === page ? "default" : "outline"}
-                            onClick={() => typeof page === 'number' && setCurrentPage(page)}
-                            disabled={page === '...'}
-                            className="min-w-8 flex justify-center"
-                        >
-                        {page}
-                        </Button>
-                    ))}
+            {transactions.length > 5 && (
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mt-4 gap-2 sm:gap-0 w-full p-4">
+                    <div className="text-sm text-muted-foreground">
+                        Page {currentPage} of {totalPages}
                     </div>
 
-                    {/* Next Button */}
-                    <Button
-                    size="sm"
-                    disabled={currentPage === totalPages}
-                    onClick={() => setCurrentPage(prev => prev + 1)}
-                    >
-                    Next
-                    </Button>
-                </div>
+                    {/* Controls */}
+                    <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-1 overflow-x-auto">
+                        {/* Previous Button */}
+                        <Button
+                            size="sm"
+                            disabled={currentPage === 1}
+                            onClick={() => setCurrentPage(prev => prev - 1)}
+                        >
+                            Previous
+                        </Button>
 
-                {/* Items per page */}
-                <Select
-                    value={itemsPerPage.toString()}
-                    onValueChange={(val) => {
-                    setItemsPerPage(Number(val))
-                    setCurrentPage(1)
-                    }}
-                >
-                    <SelectTrigger className="w-18">
-                        <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                    <SelectItem value="5">5</SelectItem>
-                    <SelectItem value="10">10</SelectItem>
-                    <SelectItem value="20">20</SelectItem>
-                    <SelectItem value="50">50</SelectItem>
-                    </SelectContent>
-                </Select>
-            </div>
+                        {/* Page Numbers - scrollable on small screens */}
+                        <div className="flex gap-1 overflow-x-auto px-1">
+                        {getPageNumbers(currentPage, totalPages).map((page, index) => (
+                            <Button
+                                key={index}
+                                size="sm"
+                                variant={currentPage === page ? "default" : "outline"}
+                                onClick={() => typeof page === 'number' && setCurrentPage(page)}
+                                disabled={page === '...'}
+                                className="min-w-8 flex justify-center"
+                            >
+                            {page}
+                            </Button>
+                        ))}
+                        </div>
+
+                        {/* Next Button */}
+                        <Button
+                        size="sm"
+                        disabled={currentPage === totalPages}
+                        onClick={() => setCurrentPage(prev => prev + 1)}
+                        >
+                        Next
+                        </Button>
+                    </div>
+
+                    {/* Items per page */}
+                    <Select
+                        value={itemsPerPage.toString()}
+                        onValueChange={(val) => {
+                        setItemsPerPage(Number(val))
+                        setCurrentPage(1)
+                        }}
+                    >
+                        <SelectTrigger className="w-18">
+                            <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                        <SelectItem value="5">5</SelectItem>
+                        <SelectItem value="10">10</SelectItem>
+                        <SelectItem value="20">20</SelectItem>
+                        <SelectItem value="50">50</SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>
+            )}
         </div>
     </div>
   )
