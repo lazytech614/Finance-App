@@ -17,6 +17,12 @@ import { updateDefaultAccount } from "@/actions/accounts"
 import { toast } from "sonner"
 import { useEffect } from "react"
 
+type UpdateDefaultAccountResponse = {
+  success: boolean
+  data?: any
+  error?: string
+}
+
 export const AccountCard = ({account}: any) => {
     const {name, type, id, balance, isDefault} = account
 
@@ -25,7 +31,7 @@ export const AccountCard = ({account}: any) => {
         fn: updateDefaultAccountFn,
         data: updateDefaultAccountData,
         error
-    } = useFetch(updateDefaultAccount)
+    } = useFetch<UpdateDefaultAccountResponse>(updateDefaultAccount)
 
     const handleDefaultChange = async(e: any) => {
         e.preventDefault()
@@ -39,8 +45,7 @@ export const AccountCard = ({account}: any) => {
     }
 
     useEffect(() => {
-        if((updateDefaultAccountData as any).success) {
-            console.log(updateDefaultAccountData)
+        if(updateDefaultAccountData?.success) {
             toast.success("Default account updated successfully")
         }
     }, [updateDefaultAccountData, updateDefaultAccountLoading])

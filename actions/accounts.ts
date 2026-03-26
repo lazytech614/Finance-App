@@ -4,6 +4,7 @@ import prisma from "@/lib/prisma"
 import { auth } from "@clerk/nextjs/server"
 import { Decimal } from "@prisma/client/runtime/client"
 import { revalidatePath } from "next/cache"
+import { success } from "zod"
 
 const serializeTransaction = (obj: any) => {
     const serialized = {...obj}
@@ -104,8 +105,8 @@ export async function getAccountWithTransaction(accountId: string) {
 
         return {
             ...serializeTransaction(account),
-            transactions: account.transactions.map(serializeTransaction)
-
+            transactions: account.transactions.map(serializeTransaction),
+            success: true
         }
     }catch (error: any) {
         return {success: false, error: error.message}

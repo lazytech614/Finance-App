@@ -1,27 +1,27 @@
 import { useState } from "react"
 import { toast } from "sonner"
 
-const useFetch = (cb: Function) => {
-    const [data, setData] = useState(undefined)
+const useFetch = <T,>(cb: (...args: any[]) => Promise<T>) => {
+    const [data, setData] = useState<T | null>(null)
     const [loading, setLoading] = useState(false)
-    const [error, setError] = useState<any>(null)
+    const [error, setError] = useState<Error | null>(null)
 
-    const fn = async(...args: any) => {
+    const fn = async (...args: any[]): Promise<T | void> => {
         setLoading(true)
         setError(null)
         try {
             const res = await cb(...args)
             setData(res)
-            setError(null)
+            return res
         } catch (error) {
-            setError(error)
+            setError(error as Error)
             toast.error((error as Error).message)
         } finally {
             setLoading(false)
         }
     }
 
-    return {data, loading, error, fn, setData}
+    return { data, loading, error, fn, setData }
 }
 
 export default useFetch

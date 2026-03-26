@@ -35,6 +35,12 @@ import { useEffect } from "react"
 import { toast } from "sonner"
 import { ReciptScanner } from "./recipt-scanner"
 
+type TransactionResponse = {
+  success: boolean
+  data?: any
+  error?: string
+}
+
 export const AddTransactionForm = ({accounts, categories, editMode=false, intialData=null, editId}: any) => {
 
     const router = useRouter()
@@ -83,7 +89,7 @@ export const AddTransactionForm = ({accounts, categories, editMode=false, intial
         fn: transactionFn,
         data: transactionData,
         error
-    } = useFetch(editMode ?  updateTransaction : createTransaction)
+    } = useFetch<TransactionResponse>(editMode ?  updateTransaction : createTransaction)
 
     const type = watch("type")
     const isRecurring = watch("isRecurring")
@@ -104,10 +110,10 @@ export const AddTransactionForm = ({accounts, categories, editMode=false, intial
     }
 
     useEffect(() => {
-        if((transactionData as any)?.success && !transactionLoading) {
+        if(transactionData?.success && !transactionLoading) {
             toast.success(editMode ? "Transaction Updated Successfully" : "Transaction Created Successfully")
             reset()
-            router.push(`/account/${(transactionData as any).data.accountId}`)
+            router.push(`/account/${transactionData.data.accountId}`)
         }
     }, [transactionData, transactionLoading, editMode])
 

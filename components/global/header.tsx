@@ -22,14 +22,16 @@ export const Header = async () => {
         </Link>
         <div>
           <Show when="signed-out">
-            <SignInButton forceRedirectUrl={"/dashboard"}>
-              <Button variant={'outline'} className="">Sign In</Button>
-            </SignInButton>
-            <SignUpButton>
-              <Button variant={'outline'} className="">
-                Sign Up
-              </Button>
-            </SignUpButton>
+            <div className="flex gap-x-2 items-center">
+              <SignInButton forceRedirectUrl={"/dashboard"}>
+                <Button variant={'outline'} className="">Sign In</Button>
+              </SignInButton>
+              <SignUpButton>
+                <Button  className="">
+                  Sign Up
+                </Button>
+              </SignUpButton>
+            </div>
           </Show>
 
           <Show when="signed-in">
